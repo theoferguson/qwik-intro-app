@@ -1,6 +1,6 @@
 import { component$, Signal, Slot, useContext, useContextProvider, useSignal, useTask$ } from '@builder.io/qwik';
 import { beerContextId } from './beer-context-id';
-
+import { BeerSelector } from './beer-selector';
 
 export default component$(() => {
   const isTheoVisibleSignal = useSignal(false);
@@ -18,9 +18,6 @@ export default component$(() => {
 
   return (
     <>
-    <div>
-      hello world
-    </div>
     <BeerGiver />
     {isTheoVisibleSignal.value ?
     <Theo></Theo> :
@@ -41,6 +38,8 @@ export const Theo = component$(() => {
 
 export const BeerGiver =  component$(() => {
 return <div>
+  <BeerSelector />
+  <hr />
   <BeerButton />
 </div>
 });
