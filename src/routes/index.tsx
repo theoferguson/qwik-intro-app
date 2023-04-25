@@ -1,9 +1,12 @@
-import { component$, Signal, Slot, useSignal, useTask$ } from '@builder.io/qwik';
+import { component$, Signal, Slot, useContext, useContextProvider, useSignal, useTask$ } from '@builder.io/qwik';
+import { beerContextId } from './beer-context-id';
 
 
 export default component$(() => {
   const isTheoVisibleSignal = useSignal(false);
   const didTheoGetBeerSignal = useSignal(false);
+
+  useContextProvider(beerContextId, didTheoGetBeerSignal);
 
   useTask$(({track}) => {
     track(() => didTheoGetBeerSignal.value);
@@ -18,7 +21,7 @@ export default component$(() => {
     <div>
       hello world
     </div>
-    <BeerGiver gotBeerSignal={didTheoGetBeerSignal} />
+    <BeerGiver />
     {isTheoVisibleSignal.value ?
     <Theo></Theo> :
     null
@@ -36,25 +39,17 @@ export const Theo = component$(() => {
   )
 })
 
-
-interface BeerGiverProps{
-  gotBeerSignal: Signal<boolean>;
-}
-
-export const BeerGiver =  component$((props: BeerGiverProps) => {
+export const BeerGiver =  component$(() => {
 return <div>
-  <BeerButton gotBeerSignal={props.gotBeerSignal} />
+  <BeerButton />
 </div>
 });
 
-interface BeerButtonProps{
-  gotBeerSignal: Signal<boolean>;
-}
-
-export const BeerButton = component$((props: BeerButtonProps) => {
+export const BeerButton = component$(() => {
+  const gotBeerSignal = useContext(beerContextId);
   return <div>
     <button onClick$={() => {
-      props.gotBeerSignal.value = true;
+      gotBeerSignal.value = true;
     }}>
       give me a value
     </button>
